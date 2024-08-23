@@ -1,5 +1,6 @@
 package com.aop;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -29,6 +30,7 @@ public class Rolodex extends Frame implements KeyListener {
     // CONTACTS
     private List<Contact> _rolodexContacts;
     private static Contact _currContact;
+    private int _currActionOrdinal;
 
     // GET SINGLETON
     public static Rolodex getInstance(){
@@ -43,6 +45,10 @@ public class Rolodex extends Frame implements KeyListener {
          * INITIALIZE ROLODEX CONTACTS
          * INIT CURRENT CONTACT
          */
+
+         _rolodexContacts = new ArrayList<>();
+         _currActionOrdinal = 0;
+         
     }
 
     public void render(){
