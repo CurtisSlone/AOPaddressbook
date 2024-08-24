@@ -45,7 +45,8 @@ public class Rolodex extends Frame implements KeyListener {
          * INITIALIZE ROLODEX CONTACTS
          * INIT CURRENT CONTACT
          */
-
+        addKeyListener(this);
+        setVisible(true);
          _rolodexContacts = new ArrayList<>();
          _currActionOrdinal = 0;
          
@@ -55,6 +56,12 @@ public class Rolodex extends Frame implements KeyListener {
         /*
          * RENDER ROLODEX INTERFACE
          */
+        System.out.println(_currContact.toString());
+        for (Action action : Action.values()){
+            if(action == Action.values()[_currActionOrdinal])
+                System.out.print(TEXT_BRIGHT_BG_WHITE  + TEXT_COLOR_BLACK  + action + " ");
+            else System.out.print(action + " ");
+        }
     }
 
     /*
@@ -68,6 +75,25 @@ public class Rolodex extends Frame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        for(int n = 0; n < 35; n++ ) System.out.println("");
+        int kc = e.getKeyCode();
+        switch(kc) {
+            case KeyEvent.VK_LEFT:
+                if( _currActionOrdinal == 0 ) _currActionOrdinal = 5;
+                else _currActionOrdinal -= 1;
+                break;
+            case KeyEvent.VK_RIGHT:
+            if( _currActionOrdinal == 5 ) _currActionOrdinal = 0;
+            else _currActionOrdinal += 1;
+                break;
+            case KeyEvent.VK_ENTER:
+               
+                break;
+            default:
+                break;
+        }
+
+        render(); // Force render on Key Event
     }
 
     @Override
@@ -87,8 +113,8 @@ public class Rolodex extends Frame implements KeyListener {
         _rolodexContacts = contacts;
      }
 
-     public void setCurrentContact(Contact contact) {
-        Rolodex._currContact = contact;
+     public void setCurrentContact(int i) {
+        Rolodex._currContact = _rolodexContacts.get(i);
      }
 
 }
