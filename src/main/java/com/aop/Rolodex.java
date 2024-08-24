@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,10 +26,32 @@ public class Rolodex extends Frame implements KeyListener {
         EXIT
     }
 
+     //ROLODEX SINGLETON
+     private static Rolodex _rolodex = null;
+
+     // CONTACTS
+     private static List<Contact> _rolodexContacts;
+     private static Contact _currContact;
+     private int _currActionOrdinal;
+
     public static Map<Action, MenuCommand> menuCommands= new HashMap<Action, MenuCommand>();
 
     static {
-        menuCommands.put(Action.ADD_CONTACT, ()->{});
+        menuCommands.put(Action.ADD_CONTACT, ()->{ 
+            System.out.println("Type the name, street address, city, state, zip code, and phone number.\n Separate all value using a ','.\n Example: Gary T Snail, 456 Pineapple rd, bikini bottom, AO, 89098, 454-544-0987\n Thank you.");
+
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+            String[] values = input.split(",");
+
+            if(values.length < 6)
+                throw new IllegalArgumentException("Incorrect values. Try again");
+
+            Contact contact = new Contact(values[0], values[1], values[2], values[3], values[4], values[5]);
+            System.out.println("Contact: " + contact);
+            Rolodex.addContact(contact);
+
+     });
         menuCommands.put(Action.DELETE_CONTACT, ()->{});
         menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
         menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) + 1) % Rolodex._rolodexContacts.size()); });
@@ -37,13 +60,7 @@ public class Rolodex extends Frame implements KeyListener {
     }
 
 
-    //ROLODEX SINGLETON
-    private static Rolodex _rolodex = null;
-
-    // CONTACTS
-    private static List<Contact> _rolodexContacts;
-    private static Contact _currContact;
-    private int _currActionOrdinal;
+   
 
     // GET SINGLETON
     public static Rolodex getInstance(){
@@ -84,6 +101,10 @@ public class Rolodex extends Frame implements KeyListener {
      public void menuCommand(Action action){
         menuCommands.get(action).execute();
      }
+
+     public static void addContact(Contact contact){
+        _rolodexContacts.add(contact);
+     }
      
      /*
       * SETTERS
@@ -113,10 +134,10 @@ public class Rolodex extends Frame implements KeyListener {
                 else _currActionOrdinal -= 1;
                 break;
             case KeyEvent.VK_RIGHT:
-            if( _currActionOrdinal == 5 ) _currActionOrdinal = 0;
+            if( _currActionOrdinal == 5) _currActionOrdinal = 0;
             else _currActionOrdinal += 1;
                 break;
-            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_SPACE:
                 menuCommand(Action.values()[_currActionOrdinal]);
                 break;
             default:
