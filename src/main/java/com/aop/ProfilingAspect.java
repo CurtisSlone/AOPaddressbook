@@ -7,13 +7,13 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class ProfilingAspect {
 
-    // @Pointcut("execution(* *.*(..))")
-    // public void publicOperation(){}
+    @Pointcut("execution(* *.*(..))")
+    public void publicOperation(){}
 
-    // @Around("publicOperation()")
-    // public Object profile(ProceedingJoinPoint pjp) throws Throwable {
-    //     Object ret = pjp.proceed();
-    //     System.out.println(pjp.getSignature());
-    //     return ret;
-    // }
+    @Around("publicOperation()")
+    public Object profile(ProceedingJoinPoint pjp) throws Throwable {
+        Object ret = pjp.proceed();
+        System.out.println(pjp.getSignature());
+        return ret;
+    }
 }
