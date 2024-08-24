@@ -1,0 +1,12 @@
+Updating contact: Name: Gary T Snail
+ City:  bikini bottom
+ State:  AO
+ Zip:  89098
+ Phone Number:  454-544-0987
+
+Deleting contact: Name: [C[CGary T Snail
+ City:  bikini bottom
+ State:  AO
+ Zip:  89098
+ Phone Number:  454-544-0987
+

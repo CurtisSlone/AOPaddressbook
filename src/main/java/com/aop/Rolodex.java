@@ -43,19 +43,41 @@ public class Rolodex extends Frame implements KeyListener {
             Scanner in = new Scanner(System.in);
             String input = in.nextLine();
             String[] values = input.split(",");
-
             if(values.length < 6)
                 throw new IllegalArgumentException("Incorrect values. Try again");
 
             Contact contact = new Contact(values[0], values[1], values[2], values[3], values[4], values[5]);
-            System.out.println("Contact: " + contact);
             Rolodex.addContact(contact);
 
      });
-        menuCommands.put(Action.DELETE_CONTACT, ()->{});
+        menuCommands.put(Action.DELETE_CONTACT, ()->{
+            System.out.println("Are you sure you want to delete contact: " + Rolodex._currContact);
+            Scanner in = new Scanner(System.in);
+            if(in.nextLine().equalsIgnoreCase("y"))
+                Rolodex.deleteContact(Rolodex._currContact);
+            else System.out.println("You did not confirm deletion. Please try again");
+        });
         menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
+
         menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) + 1) % Rolodex._rolodexContacts.size()); });
-        menuCommands.put(Action.UPDATE_CONTACT, ()->{});
+
+        menuCommands.put(Action.UPDATE_CONTACT, ()->{
+            System.out.println("Type the name, street address, city, state, zip code, and phone number.\n Separate all value using a ','.\n Example: Gary T Snail, 456 Pineapple rd, bikini bottom, AO, 89098, 454-544-0987\n Thank you.");
+
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+            String[] values = input.split(",");
+            if(values.length < 6)
+                throw new IllegalArgumentException("Incorrect values. Try again");
+            Rolodex.updateContact(_currContact);
+            _currContact.setName(values[0]);
+            _currContact.setStreet(values[1]);
+            _currContact.setCity(values[2]);
+            _currContact.setState(values[3]);
+            _currContact.setZip(values[4]);
+            _currContact.setPhoneNumber(values[5]);
+        });
+
         menuCommands.put(Action.EXIT, ()->{ System.exit(0);});
     }
 
@@ -105,6 +127,13 @@ public class Rolodex extends Frame implements KeyListener {
      public static void addContact(Contact contact){
         _rolodexContacts.add(contact);
      }
+
+     public static void deleteContact(Contact contact){
+        _rolodexContacts.remove(contact);
+     }
+
+     public static void updateContact(Contact contact){}
+
      
      /*
       * SETTERS
