@@ -1,7 +1,9 @@
 package com.aop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,8 +12,7 @@ public class Rolodex extends Frame implements KeyListener {
     /*
      * TERMINAL COLOR
      */
-    public static final String TEXT_BRIGHT_BG_WHITE = "\u001B[47m";
-    public static final String TEXT_COLOR_BLACK   = "\u001B[40m";
+    public static final String TEXT_BRIGHT_BG_CYAN   = "\u001B[106m"; 
     public static final String TEXT_RESET  = "\u001B[0m";
 
     // ROLODEX ACTIONS
@@ -24,11 +25,23 @@ public class Rolodex extends Frame implements KeyListener {
         EXIT
     }
 
+    public static Map<Action, MenuCommand> menuCommands= new HashMap<Action, MenuCommand>();
+
+    static {
+        menuCommands.put(Action.ADD_CONTACT, ()->{});
+        menuCommands.put(Action.DELETE_CONTACT, ()->{});
+        menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get((Rolodex._currContact.hashCode() - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
+        menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get((Rolodex._currContact.hashCode() + 1) % Rolodex._rolodexContacts.size()); });
+        menuCommands.put(Action.UPDATE_CONTACT, ()->{});
+        menuCommands.put(Action.EXIT, ()->{ System.exit(0);});
+    }
+
+
     //ROLODEX SINGLETON
     private static Rolodex _rolodex = null;
 
     // CONTACTS
-    private List<Contact> _rolodexContacts;
+    private static List<Contact> _rolodexContacts;
     private static Contact _currContact;
     private int _currActionOrdinal;
 
@@ -59,7 +72,7 @@ public class Rolodex extends Frame implements KeyListener {
         System.out.println(_currContact.toString());
         for (Action action : Action.values()){
             if(action == Action.values()[_currActionOrdinal])
-                System.out.print(TEXT_BRIGHT_BG_WHITE  + TEXT_COLOR_BLACK  + action + " ");
+                System.out.print(TEXT_BRIGHT_BG_CYAN+ action.toString() + " " + TEXT_RESET);
             else System.out.print(action + " ");
         }
     }
@@ -87,7 +100,7 @@ public class Rolodex extends Frame implements KeyListener {
             else _currActionOrdinal += 1;
                 break;
             case KeyEvent.VK_ENTER:
-               
+                menuCommand(Action.values()[_currActionOrdinal]);
                 break;
             default:
                 break;
@@ -102,8 +115,17 @@ public class Rolodex extends Frame implements KeyListener {
     }
 
     /*
+     * METHODS
+     */
+
+     public void menuCommand(Action action){
+        menuCommands.get(action).execute();
+     }
+    /*
      * GETTERS
      */
+
+    
 
      /*
       * SETTERS
@@ -111,10 +133,7 @@ public class Rolodex extends Frame implements KeyListener {
 
       public void setContacts(List<Contact> contacts) {
         _rolodexContacts = contacts;
-     }
-
-     public void setCurrentContact(int i) {
-        Rolodex._currContact = _rolodexContacts.get(i);
+        _currContact = _rolodexContacts.get(0);
      }
 
 }

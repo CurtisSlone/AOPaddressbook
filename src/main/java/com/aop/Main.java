@@ -17,7 +17,6 @@ public class Main {
         rolodex = Rolodex.getInstance();
         rolodex.initRolodex();
         rolodex.setContacts(Main.contacts);
-        rolodex.setCurrentContact(0);
         rolodex.render();
         while(true){}
     }
