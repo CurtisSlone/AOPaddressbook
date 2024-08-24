@@ -30,8 +30,8 @@ public class Rolodex extends Frame implements KeyListener {
     static {
         menuCommands.put(Action.ADD_CONTACT, ()->{});
         menuCommands.put(Action.DELETE_CONTACT, ()->{});
-        menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get((Rolodex._currContact.hashCode() - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
-        menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get((Rolodex._currContact.hashCode() + 1) % Rolodex._rolodexContacts.size()); });
+        menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
+        menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) + 1) % Rolodex._rolodexContacts.size()); });
         menuCommands.put(Action.UPDATE_CONTACT, ()->{});
         menuCommands.put(Action.EXIT, ()->{ System.exit(0);});
     }
