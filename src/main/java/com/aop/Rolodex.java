@@ -34,10 +34,15 @@ public class Rolodex extends Frame implements KeyListener {
      private static Contact _currContact;
      private int _currActionOrdinal;
 
+    // Menu Command Map
     public static Map<Action, MenuCommand> menuCommands= new HashMap<Action, MenuCommand>();
 
     static {
-        menuCommands.put(Action.ADD_CONTACT, ()->{ 
+        /*
+         * Statically Assign all Menu Command for Key listener to execute
+         * 
+         */
+        menuCommands.put(Action.ADD_CONTACT, ()->{ // Add contact to Rolodex
             System.out.println("Type the name, street address, city, state, zip code, and phone number.\n Separate all value using a ','.\n Example: Gary T Snail, 456 Pineapple rd, bikini bottom, AO, 89098, 454-544-0987\n Thank you.");
 
             Scanner in = new Scanner(System.in);
@@ -47,21 +52,25 @@ public class Rolodex extends Frame implements KeyListener {
                 throw new IllegalArgumentException("Incorrect values. Try again");
 
             Contact contact = new Contact(values[0], values[1], values[2], values[3], values[4], values[5]);
-            Rolodex.addContact(contact);
+            Rolodex._rolodexContacts.add(contact); 
 
-     });
-        menuCommands.put(Action.DELETE_CONTACT, ()->{
+        });
+
+        menuCommands.put(Action.DELETE_CONTACT, ()->{ // Delete contact from Rolodex
             System.out.println("Are you sure you want to delete contact: " + Rolodex._currContact);
             Scanner in = new Scanner(System.in);
             if(in.nextLine().equalsIgnoreCase("y"))
                 Rolodex.deleteContact(Rolodex._currContact);
             else System.out.println("You did not confirm deletion. Please try again");
         });
-        menuCommands.put(Action.PREV_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
 
-        menuCommands.put(Action.NEXT_CONTACT, ()->{ Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) + 1) % Rolodex._rolodexContacts.size()); });
+        menuCommands.put(Action.PREV_CONTACT, ()->{ // Get Previous Contact in Rolodex
+            Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) - 1 + Rolodex._rolodexContacts.size()) % Rolodex._rolodexContacts.size());});
 
-        menuCommands.put(Action.UPDATE_CONTACT, ()->{
+        menuCommands.put(Action.NEXT_CONTACT, ()->{ // Get Next Contact in Rolodex
+            Rolodex._currContact = Rolodex._rolodexContacts.get(((Rolodex._rolodexContacts.indexOf(Rolodex._currContact)) + 1) % Rolodex._rolodexContacts.size()); });
+
+        menuCommands.put(Action.UPDATE_CONTACT, ()->{ // Update Contact in Rolodex
             System.out.println("Type the name, street address, city, state, zip code, and phone number.\n Separate all value using a ','.\n Example: Gary T Snail, 456 Pineapple rd, bikini bottom, AO, 89098, 454-544-0987\n Thank you.");
 
             Scanner in = new Scanner(System.in);
@@ -78,7 +87,8 @@ public class Rolodex extends Frame implements KeyListener {
             _currContact.setPhoneNumber(values[5]);
         });
 
-        menuCommands.put(Action.EXIT, ()->{ System.exit(0);});
+        menuCommands.put(Action.EXIT, ()->{ //Exit the program
+            System.exit(0);});
     }
 
 
@@ -120,19 +130,11 @@ public class Rolodex extends Frame implements KeyListener {
      * METHODS
      */
 
-     public void menuCommand(Action action){
-        menuCommands.get(action).execute();
-     }
+     public void menuCommand(Action action){ menuCommands.get(action).execute(); } // Executes command associated with menu action item
 
-     public static void addContact(Contact contact){
-        _rolodexContacts.add(contact);
-     }
+     public static void deleteContact(Contact contact){ _rolodexContacts.remove(contact); } // Delete contact method for JoinPoint
 
-     public static void deleteContact(Contact contact){
-        _rolodexContacts.remove(contact);
-     }
-
-     public static void updateContact(Contact contact){}
+     public static void updateContact(Contact contact){ } //Empty method to create JoinPoint
 
      
      /*
@@ -140,6 +142,9 @@ public class Rolodex extends Frame implements KeyListener {
       */
 
       public void setContacts(List<Contact> contacts) {
+        /*
+         * Method to set initial contacts
+         */
         _rolodexContacts = contacts;
         _currContact = _rolodexContacts.get(0);
      }
@@ -150,23 +155,20 @@ public class Rolodex extends Frame implements KeyListener {
     */
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
     public void keyPressed(KeyEvent e) {
-        for(int n = 0; n < 35; n++ ) System.out.println("");
+
+        for(int n = 0; n < 35; n++ ) System.out.println(""); // Create space for next screen to be rendered
         int kc = e.getKeyCode();
         switch(kc) {
-            case KeyEvent.VK_LEFT:
+            case KeyEvent.VK_LEFT: // Move left in menu
                 if( _currActionOrdinal == 0 ) _currActionOrdinal = 5;
                 else _currActionOrdinal -= 1;
                 break;
-            case KeyEvent.VK_RIGHT:
+            case KeyEvent.VK_RIGHT: //Move right in menu
             if( _currActionOrdinal == 5) _currActionOrdinal = 0;
             else _currActionOrdinal += 1;
                 break;
-            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_SPACE: //Select Current Menu item
                 menuCommand(Action.values()[_currActionOrdinal]);
                 break;
             default:
@@ -177,10 +179,7 @@ public class Rolodex extends Frame implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    
-
+    public void keyReleased(KeyEvent e) { }
+    @Override
+    public void keyTyped(KeyEvent e) { }
 }

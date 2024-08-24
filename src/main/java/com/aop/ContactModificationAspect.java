@@ -11,28 +11,32 @@ import java.io.IOException;
 
 @Aspect
 public class ContactModificationAspect {
+
+    // FILE ATTRIBUTES
     private final String filePath = "contactarchive.txt"; 
     File file = new File(filePath);
 
-
+    // POINTCUTS TO MATCH ONLY CONTACT-MODIFICATION METHODS
     @Pointcut("execution(* com.aop.Rolodex.*Contact(Contact))")
     public void modifyContact(){}
 
+    // AROUND ADVICE TO LOG CONTACT MODIFICATIONS TO A FILE
     @Around("modifyContact()")
     public Object logModification(ProceedingJoinPoint pjp) throws Throwable {
 
-        Contact contact = (Contact) pjp.getArgs()[0];
-        String textToAppend = "";
-        String methodName = pjp.getSignature().getName();
+        
+        Contact contact = (Contact) pjp.getArgs()[0]; // Get the contact object from the arguments of the join point
+        String textToAppend = ""; // Prepare text to be appended to the file
+        String methodName = pjp.getSignature().getName(); // Get the class name from the join point
 
-        if ("addContact".equals(methodName)) {
-            return pjp.proceed(); // Skip this method if only adding a contact
-        } else if ("updateContact".equals(methodName)) {
+        // Determine the type of modification (add, update, delete) and log the contact details to the file
+        if ("updateContact".equals(methodName)) {
             textToAppend = "Updating contact: " + contact.toString() + "\n";
         } else if ("deleteContact".equals(methodName)) {
             textToAppend = "Deleting contact: " + contact.toString() + "\n";
         }
 
+        // Check if the file exists, create it if it doesn't exist, and append the text to the file
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -50,6 +54,6 @@ public class ContactModificationAspect {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
 
-        return pjp.proceed();
+        return pjp.proceed(); // Return
     }
 }

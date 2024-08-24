@@ -13,9 +13,6 @@ public class Contact {
      * CONSTRUCTORS
      */
 
-    // For loading from file using JACKSON JSON
-    public Contact() { }
-
     // For creating new Contact
     public Contact(String name, String street, String city, String state, String zip, String phoneNumber) {
         _name = name;
