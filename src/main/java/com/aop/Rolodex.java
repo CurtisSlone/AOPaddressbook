@@ -78,6 +78,23 @@ public class Rolodex extends Frame implements KeyListener {
     }
 
     /*
+     * METHODS
+     */
+
+     public void menuCommand(Action action){
+        menuCommands.get(action).execute();
+     }
+     
+     /*
+      * SETTERS
+      */
+
+      public void setContacts(List<Contact> contacts) {
+        _rolodexContacts = contacts;
+        _currContact = _rolodexContacts.get(0);
+     }
+
+    /*
     * KEY LISTENER METHODS
     * Implemented from KeyListener Interface
     */
@@ -114,26 +131,6 @@ public class Rolodex extends Frame implements KeyListener {
         // TODO Auto-generated method stub
     }
 
-    /*
-     * METHODS
-     */
-
-     public void menuCommand(Action action){
-        menuCommands.get(action).execute();
-     }
-    /*
-     * GETTERS
-     */
-
     
-
-     /*
-      * SETTERS
-      */
-
-      public void setContacts(List<Contact> contacts) {
-        _rolodexContacts = contacts;
-        _currContact = _rolodexContacts.get(0);
-     }
 
 }
